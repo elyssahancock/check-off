@@ -4,9 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="/Users/elyssahancock/Desktop/check off/go.js"></script>
+    <script src="/go.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <h1> This is my page</h1>
+    <input id="num" type="number"></input>
+    <button onclick="getValue()">Submit</button>
+    <div>
+     <canvas id="myDonutChart"></canvas>
+    </div>
+
+
 </body>
+
 </html>
+<script>
+    console.log("js is connected");
+function getValue() {
+    // Get the input element by its ID
+    var inputElement = document.getElementById('num');
+
+    // Or you can use document.querySelector
+    // var inputElement = document.querySelector('#myInput');
+
+    // Get the value of the input element
+    var inputValue = inputElement.value;
+
+    // Log the value to the console or do something with it
+    console.log('Input value:', inputValue);
+    updateChart()
+    return inputValue
+}
+
+
+//   new Chart(ctx, {
+//     type: 'bar',
+//     data: {
+//       labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+//       datasets: [{
+//         label: '# of Votes',
+//         data: [12, 19, 3, 5, 2, 3],
+//         borderWidth: 1
+//       }]
+//     },
+//     options: {
+//       scales: {
+//         y: {
+//           beginAtZero: true
+//         }
+//       }
+//     }
+//   });
+var completedNum = 1;
+var total = 10
+var data = {
+    labels: ['Completed', 'Remaining'],
+    datasets: [{
+        data: [completedNum, total], // Adjust these values as needed
+        backgroundColor: ['#FFFFFF','#36A2EB'], // Colors for each value
+        hoverOffset: 4, // Spacing when hovering
+    }],
+};
+
+// Configuration options for the donut chart
+var options = {
+    plugins: {
+        legend: {
+            display: true,
+            position: 'bottom',
+        },
+    },
+    onClick: chartClickHandler
+};
+
+// Get the canvas element
+var ctx = document.getElementById('myDonutChart').getContext('2d');
+
+// Create a donut chart
+var myDonutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+    options: options,
+});
+
+function updateChart() {
+    // Get the input value
+    var inputValue = parseFloat(document.getElementById('num').value);
+
+    // Check if the input is a valid number
+    if (!isNaN(inputValue)) {
+        // Update the data
+        myDonutChart.data.datasets[0].data[0] = completedNum;
+        myDonutChart.data.datasets[0].data[1] = inputValue - completedNum;
+
+        // Update the chart
+        myDonutChart.update();
+    } else {
+        alert('Please enter a valid number.');
+    }   
+    console.log(`updated chart values -- Total: ${inputValue -completedNum}  -- Completed ${completedNum} `)
+
+}
+function chartClickHandler(event, chartElements) {
+    // Check if any elements were clicked
+    completedNum += 1;
+    updateChart();
+}
+</script>
